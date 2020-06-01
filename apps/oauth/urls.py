@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.urls import path
+from django.conf.urls import url
 from .views import profile_view, change_profile_view
 
 
 urlpatterns = [
-    path('profile/',profile_view,name='profile'),
-    path('profile/change/',change_profile_view,name='change_profile'),
+    url(r'^profile/$',profile_view,name='profile'),
+    url(r'^profile/change/$',change_profile_view,name='change_profile'),
 
 ]

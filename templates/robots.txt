@@ -1,4 +1,4 @@
-﻿User-agent: *
+﻿﻿User-agent: *
 Disallow: /adminx/
 Disallow: /accounts/
 Disallow: /comment/
@@ -6,4 +6,4 @@ Disallow: /feed/
 Disallow: /search/
 Disallow: /silian.xml
 
-Sitemap: {{ site_url }}/sitemap.xml
+Sitemap: http://www.tendcode.com/sitemap.xml

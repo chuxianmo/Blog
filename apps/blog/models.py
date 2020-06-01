@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.shortcuts import reverse
 import markdown
+import emoji
 import re
 
 
@@ -68,7 +69,7 @@ class Category(models.Model):
 # 文章
 class Article(models.Model):
     IMG_LINK = '/static/blog/img/summary.png'
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='作者', on_delete=models.PROTECT)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='作者')
     title = models.CharField(max_length=150, verbose_name='文章标题')
     summary = models.TextField('文章摘要', max_length=230, default='文章摘要等同于网页description内容，请务必填写...')
     body = models.TextField(verbose_name='文章内容')
@@ -77,9 +78,8 @@ class Article(models.Model):
     update_date = models.DateTimeField(verbose_name='修改时间', auto_now=True)
     views = models.IntegerField('阅览量', default=0)
     slug = models.SlugField(unique=True)
-    is_top = models.BooleanField('置顶', default=False)
 
-    category = models.ForeignKey(Category, verbose_name='文章分类', on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, verbose_name='文章分类')
     tags = models.ManyToManyField(Tag, verbose_name='标签')
     keywords = models.ManyToManyField(Keyword, verbose_name='文章关键词',
                                       help_text='文章关键词，用来作为SEO中keywords，最好使用长尾词，3-4个足够')
@@ -148,8 +148,13 @@ class Timeline(models.Model):
     def __str__(self):
         return self.title[:20]
 
+    def title_to_emoji(self):
+        return emoji.emojize(self.title, use_aliases=True)
+
     def content_to_markdown(self):
-        return markdown.markdown(self.content,
+        # 先转换成emoji然后转换成markdown
+        to_emoji_content = emoji.emojize(self.content, use_aliases=True)
+        return markdown.markdown(to_emoji_content,
                                  extensions=['markdown.extensions.extra', ]
                                  )
 
@@ -217,22 +222,3 @@ class FriendLink(models.Model):
     def show_to_false(self):
         self.is_show = True
         self.save(update_fields=['is_show'])
-
-class AboutBlog(models.Model):
-    body = models.TextField(verbose_name='About 内容')
-    create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
-    update_date = models.DateTimeField(verbose_name='修改时间', auto_now=True)
-
-    class Meta:
-        verbose_name = 'About'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return 'About'
-
-    def body_to_markdown(self):
-        return markdown.markdown(self.body, extensions=[
-            'markdown.extensions.extra',
-            'markdown.extensions.codehilite',
-        ])
-

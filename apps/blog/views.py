@@ -2,8 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.text import slugify
 from django.views import generic
 from django.conf import settings
-from .models import Article, Tag, Category, Timeline, Silian, AboutBlog
-from .utils import site_full_url
+from .models import Article, Tag, Category, Timeline, Silian
 from django.core.cache import cache
 
 from markdown.extensions.toc import TocExtension  # 锚点的拓展
@@ -16,16 +15,17 @@ from haystack.query import SearchQuerySet
 
 # Create your views here.
 
-def goview(request):
-    return render(request, 'test_html.html')
-
-
 class ArchiveView(generic.ListView):
     model = Article
     template_name = 'blog/archive.html'
     context_object_name = 'articles'
     paginate_by = 200
     paginate_orphans = 50
+
+
+# 首页
+def homepage(request):
+    return render(request, 'blog/homepage.html')
 
 
 class IndexView(generic.ListView):
@@ -36,10 +36,11 @@ class IndexView(generic.ListView):
     paginate_orphans = getattr(settings, 'BASE_ORPHANS', 0)
 
     def get_ordering(self):
+        ordering = super(IndexView, self).get_ordering()
         sort = self.kwargs.get('sort')
         if sort == 'v':
             return ('-views', '-update_date', '-id')
-        return ('-is_top', '-create_date')
+        return ordering
 
 
 class DetailView(generic.DetailView):
@@ -69,16 +70,16 @@ class DetailView(generic.DetailView):
         md_key = '{}_md_{}'.format(obj.id, ud)
         cache_md = cache.get(md_key)
         if cache_md:
-            obj.body, obj.toc = cache_md
+            md = cache_md
         else:
             md = markdown.Markdown(extensions=[
                 'markdown.extensions.extra',
                 'markdown.extensions.codehilite',
                 TocExtension(slugify=slugify),
             ])
-            obj.body = md.convert(obj.body)
-            obj.toc = md.toc
-            cache.set(md_key, (obj.body, obj.toc), 60 * 60 * 12)
+            cache.set(md_key, md, 60 * 60 * 12)
+        obj.body = md.convert(obj.body)
+        obj.toc = md.toc
         return obj
 
 
@@ -137,20 +138,8 @@ class TagView(generic.ListView):
 
 
 def AboutView(request):
-    obj = AboutBlog.objects.first()
-    if obj:
-        ud = obj.update_date.strftime("%Y%m%d%H%M%S")
-        md_key = '{}_md_{}'.format(obj.id, ud)
-        cache_md = cache.get(md_key)
-        if cache_md:
-            body = cache_md
-        else:
-            body = obj.body_to_markdown()
-            cache.set(md_key, body, 3600 * 24 * 15)
-    else:
-        repo_url = 'https://github.com/Hopetree'
-        body = '<li>作者 Github 地址：<a href="{}">{}</a></li>'.format(repo_url, repo_url)
-    return render(request, 'blog/about.html', context={'body': body})
+    site_date = datetime.datetime.strptime('2018-04-12','%Y-%m-%d')
+    return render(request, 'blog/about.html',context={'site_date':site_date})
 
 
 class TimelineView(generic.ListView):
@@ -173,6 +162,3 @@ class MySearchView(SearchView):
     queryset = SearchQuerySet().order_by('-views')
 
 
-def robots(request):
-    site_url = site_full_url()
-    return render(request, 'robots.txt', context={'site_url': site_url}, content_type='text/plain')

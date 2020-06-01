@@ -101,11 +101,6 @@ blockquote {
     border-color: #f5c6cb;
 }
 /* top navbar-------------------------------------------------*/
-#site-logo-name,
-#site-logo-name:hover,
-#site-logo-name:active {
-    color: #3c3f41;
-}
 .blog-navbar {
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);
 }
@@ -144,7 +139,7 @@ blockquote {
 /*to top+++++++++++++++++++++++++++++++++++++++++++++++++*/
 #to-top {
     position: fixed;
-    bottom: 6em;
+    bottom: 4em;
     right: 5%;
     height: 36px;
     width: 36px;
@@ -184,10 +179,6 @@ blockquote {
     border-bottom: 2px solid #00AAEE;
 }
 /* article summary --------------------------------------------------*/
-.top-article-img {
-    margin-right: -.5rem;
-    margin-top: -.5rem;
-}
 .choice .active {
     color:#212529;
     border-bottom: 2px solid #646464;
@@ -209,11 +200,6 @@ blockquote {
 }
 
 /* base right --------------------------------------------------*/
-#theme-img {
-    width: auto;
-    max-height: 14px;
-    cursor: pointer;
-}
 #home-card .card-header,
 #tag-card .card-header,
 #category-card .card-header,
@@ -326,14 +312,6 @@ blockquote {
     padding:.6em 1em;
     color:#fff;
 }
-footer {
-    background: #1c1f21;
-    color: #99979c;
-    padding: 1rem 0;
-}
-footer a:hover {
-    color:#fff;
-}
 /* Small devices (landscape phones, 576px and up) */
 /* X-iPhone6 AND plus */
 @media (min-width: 576px) {
@@ -401,10 +379,6 @@ footer a:hover {
 /* Large devices (desktops, 992px and up) */
 /* X-iPad Y-iPad Pro*/
 @media (min-width: 992px) {
-.top-article-img {
-    margin-right: -1rem;
-    margin-top: -1rem;
-}
 .container {
     max-width: 970px;
     padding-right: 15px;

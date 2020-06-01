@@ -1,0 +1,365 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=800">
+	<style>html {overflow: hidden;}</style>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="shortcut icon" href="{% static 'blog/img/icon.ico'%}" type="image/x-icon"/>
+	<link rel="stylesheet" href="/static/blog/css/style.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'blog/css/homepage.css' %}?v=20171223.05" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.5.0/headroom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
+    <style>
+		.hidden { display:none; }
+		#spinner {position:absolute;left:50%;top:50%;margin-left:-25px;margin-top:-25px;height:50px;width:50px;background:url('/static/blog/img/spinner.gif') no-repeat;}
+	</style>
+	<title>The Planetarium</title>
+</head>
+
+<body class="system">
+<!--导航开始-->
+    {% include 'blog/tags/navbar.html' %}
+<!--导航结束-->
+	<div id="starfield"></div>
+
+	<div id="spinner"></div>
+	
+	<img id="glow" src="/static/blog/img/glow.png">
+
+	<div id="title" style="margin-top: 20px; color: white">
+        <span class="marketing">&nbsp;</span>
+		<h1 class="franchise"><span class="marketing">The</span>Planetarium</h1>
+		<span id="subtitle" class="carto">An HTML5 Astronomical Adventure</span>
+	</div>
+	
+	<div id="instructions" class="carto loading">
+		click on a planet to start
+	</div>
+	
+	<ul id="planets" class="loading">
+		<li id="mercury" class="planet"></li>
+		<li id="venus" class="planet"></li>
+		<li id="earth" class="planet"></li>
+		<li id="mars" class="planet"></li>
+		<li id="jupiter" class="planet"></li>	
+		<li id="saturn" class="planet"></li>
+		<li id="uranus" class="planet"></li>
+		<li id="neptune" class="planet"></li>
+	</ul>
+
+	<div id="gui" class="shrink">
+		<div id="container"></div>
+
+		<div id="ruler">
+		</div>
+
+		<div id="counter">
+			<span class="carto">DISTANCE FROM THE SUN</span><br />
+			<span id="kilometers" class="bebas"></span>
+		</div>
+      
+		<div id="back" style="margin-top: 45px">
+			<span class="carto">Back to space</span>
+		</div>
+
+		<div id="moveleft">
+			<div id="previous">				
+				<img src="/static/blog/img/previous.svg" type="image/svg+xml" alt="Previous planet">
+			</div>
+		</div>
+		
+		<div id="moveright">
+			<div id="next">		
+				<img src="/static/blog/img/previous.svg" type="image/svg+xml" alt="Next planet">
+			</div>
+		</div>
+ 
+		<section class="content hidden" id="mercury-info">
+			<article id="mercury-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Mercury
+					</h1>
+					<p class="carto">is the first planet from the Sun and is also the smallest and densest planet of the Solar System. Mercury has yet to be entirely mapped, making it the least known planet in our system.</p>
+				</div>			
+			</article>
+			<div id="mercury-missions">
+				<h2 class="bebas">Mercury Observation Progress</h2>
+				<ul>
+					<li><img src="/static/blog/img/mercuryobs1.png" alt=""></li>
+					<li><img src="/static/blog/img/mercuryobs2.png" alt=""></li>
+					<li><img src="/static/blog/img/mercuryobs3.png" alt=""></li>
+                    <li>
+					    <span style="font-size: large"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'mercury' %}">Mercury留言墙</a><</span>
+				    </li>
+				</ul>
+				<img id="mariner10" src="/static/blog/img/mariner10.png" alt="">
+				<img id="techarrow" src="/static/blog/img/30years.png" alt="">
+				<img id="messenger" src="/static/blog/img/messenger.png" alt="">
+			</div>
+		</section>
+
+		<section class="content hidden" id="venus-info">
+			<article id="venus-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Venus
+					</h1>
+					<p>is the second planet from the Sun and is often called Earth's sister due to its many similarities with the Blue Planet. However, a strong greenhouse effect gives Venus the hottest climate in the Solar System.</p>
+				</div>			
+			</article>
+			<ul id="venus-atmosphere" class="bebas">
+				<li>65 KM
+					<span>-100°C</span>
+					<span>Sulfuric Acid Cloud Layers</span>
+				</li>
+				<li>50 KM
+					<span>0°C</span>
+					<span>Sulfuric Acid Haze</span>
+				</li>
+				<li>38 KM
+					<span>25°C</span>						
+					<span>Troposphere</span>
+				</li>
+				<li>0 KM
+					<span>467°C</span>						
+					<span>Surface Level</span>
+				</li>
+                <li>
+                    <br>
+                    <span style="font-size: large"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'venus' %}">Venus留言墙</a><</span>
+                </li>
+			</ul>
+		</section>
+
+		<section class="content hidden" id="earth-info">
+			<article id="earth-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Earth
+					</h1>
+					<p>is the third planet from the Sun, and the densest and fifth-largest of the eight planets in the Solar System. Sometimes referred to as the Blue Planet, Earth is the only known planet to harbor life.</p>
+				</div>			
+			</article>
+			<div id="earth-moon" class="grid moon">
+				<img id="distance" src="/static/blog/img/distance.png" alt="">
+			</div>
+			<ul id="earth-facts" class="properties bebas">
+				<li class="mass">
+					<img src="/static/blog/img/mass.svg" alt="mass">
+					5.9736 <small>x</small> 10<span class="exposant">24</span> kg
+					<span>That's 80 times the mass of the moon</span>
+				</li>
+				<li class="perimeter">
+					<img src="/static/blog/img/perimeter.svg" alt="perimeter">
+					40,075,16 km
+					<span>Equatorial circumference</span>
+				</li>
+				<li class="revolution">
+					<img src="/static/blog/img/revolution.svg" alt="revolution">
+					365 days
+					<span>Complete Orbital Period</span>
+				</li>
+				<li class="temperature">
+					<img src="/static/blog/img/temperature.svg" alt="temperature">
+					-89.2&deg;C to 57.8&deg;C
+					<span>Temperature range</span>
+				</li>
+                <li>
+                    <span style="font-size: large"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'earth' %}">Earth留言墙</a><</span>
+                </li>
+			</ul>
+		</section>
+		
+		<section class="content hidden" id="mars-info">
+			<article id="mars-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Mars
+					</h1>
+					<p>is the fourth planet from the Sun. Named after the Roman god of war, Mars is often described as the "Red Planet" and is the site of Olympus Mons, the highest known mountain in the Solar System.</p>
+				</div>			
+			</article>
+			<ul id="volcanoes" class="bebas">
+				<li>Olympus Mons<span>27,000 KM</span><hr /></li>
+				<li>Mount Everest<span>8,848 KM</span><hr /></li>
+				<li>Mount Fuji<span>3,776 KM</span><hr /></li>
+                <li>
+                    <span style="font-size: large"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'mars' %}">Mars留言墙</a><</span>
+                </li>
+			</ul>
+		</section>
+		
+		<section class="content hidden" id="jupiter-info">
+			<article id="jupiter-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Jupiter
+					</h1>
+					<p> is the fifth planet from the Sun and is the largest planet of the Solar System. Jupiter has 63 known satellites, the biggest of which are called the four Galilean Moons : Io, Europa, Ganymede and Callisto.</p>
+				</div>			
+			</article>				
+			<ul id="jupiter-moons" class="properties bebas">
+				<li><img src="/static/blog/img/iopicto.png" alt="">
+					IO
+					<span>Land of Volcanoes</span>
+				</li>
+				<li><img src="/static/blog/img/europapicto.png" alt="">
+					EUROPA
+					<span>Ice Ice Baby</span>
+				</li>
+				<li><img src="/static/blog/img/ganymedepicto.png" alt="">
+					GANYMEDE
+					<span>Larger than Mercury</span>	
+				</li>
+				<li><img src="/static/blog/img/callistopicto.png" alt="">
+					CALLISTO
+					<span>The Habitable Moon ?</span>
+				</li>
+                <li>
+					<span style="font-size: large"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'jupiter' %}">Jupiter留言墙</a><</span>
+				</li>
+			</ul>
+			<div id="galilean-moons" class="grid bebas"></div>
+		</section>
+		
+		<section class="content hidden" id="saturn-info">
+			<article id="saturn-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Saturn
+					</h1>
+					<p>is the sixth planet from the Sun and is the second largest planet in our system. Despite its size (9.4 Earths), Saturn's density is so low that it would float on water if there was a large enough ocean.</p>
+				</div>			
+			</article>
+			<div id="rings-origin">
+				<h2 class="bebas">The origin of Saturn's rings</h2>
+				<p class="carto">Almost entirely composed of water ice,<br />Saturn's rings are believed to<br />be the remains of a<br />former moon.</p>
+				<ul id="arrows" class="bebas">
+					<li><span>1</span>
+						<img class="saturnarrow" src="/static/blog/img/saturn-arrow1.png" alt="">
+						<img class="rings" src="/static/blog/img/rings1.png" alt="">
+						</li>
+					<li><span>2</span>
+						<img class="saturnarrow" src="/static/blog/img/saturn-arrow2.png" alt="">
+						<img class="rings" src="/static/blog/img/rings2.png" alt="">
+						</li>
+					<li><span>3</span>
+						<img class="saturnarrow" src="/static/blog/img/saturn-arrow3.png" alt="">
+						<img class="rings" src="/static/blog/img/rings3.png" alt="">
+						</li>
+                    <li>
+                        <br>
+					    <span style="font-size: large;"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'saturn' %}">Saturn留言墙</a></span>
+				    </li>
+				</ul>
+			</div>
+		</section>
+		
+		<section class="content hidden" id="uranus-info">
+			<article id="uranus-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Uranus
+					</h1>
+					<p>is the seventh planet from the Sun and is the coldest in the Solar System. Altough the first pictures taken by Voyager 2 showed a featureless, pale-blue planet, astronomers later discovered the complex atmosphere of Uranus.</p>
+				</div>			
+			</article>
+			<div id="axial-tilt" class="grid">
+				<h2 class="bebas">Axial Tilt</h2>
+				<img src="/static/blog/img/tilt.png" alt="">
+				<span class="bebas">98°</span>					
+			</div>
+			<div id="uranus-atmosphere">
+				<h2 class="bebas">The atmosphere of uranus</h2>
+				<div id="hydrogen">
+					<div></div>
+					<div></div>
+					<div></div>
+					<span class="bebas">85.3%<br />
+						Hydrogen
+					</span>						
+				</div>
+				<div id="helium">
+					<div></div>
+					<div></div>
+					<div></div>
+					<span class="bebas">15.3%<br />
+						Helium
+					</span>						
+				</div>
+				<div id="methane">
+					<div></div>
+					<div></div>
+					<div></div>
+					<span class="bebas">2.3%<br />
+						Methane
+					</span>
+				</div>
+				<div id="deuteride">
+					<div></div>
+					<div></div>
+					<div></div>
+					<span class="bebas">0.01%<br />
+						Hydrogen Deuteride
+					</span>
+				</div>
+			</div>
+            <span style="font-size: large"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'uranus' %}">Uranus留言墙</a><</span>
+		</section>
+		
+		<section class="content hidden" id="neptune-info">
+			<article id="neptune-window" class="window">
+				<div class="reflect">
+					<h1 class="bebas">
+						Neptune
+					</h1>
+					<p>is the eighth and farthest planet from the sun. Neptune has been approached only once by a man-made object, Voyager 2 space probe, in 1989. Most of our knowledge of Neptune comes from this first and only flyby.</p>
+				</div>			
+			</article>
+			<ul id="neptune-facts" class="bebas">
+				<li><img src="/static/blog/img/wind.png" alt="">
+					2100 <span>km/h</span>
+					<br />
+					<span class="carto">max wind speed</span>
+				</li>
+				<li><img src="/static/blog/img/satellite.png" alt="">
+					13 <span>known satellites</span>
+					<br />
+					<span class="carto">and counting</span>
+				</li>
+				<li><img src="/static/blog/img/time.png" alt="">
+					164 <span>earth years</span>
+					<br />
+					<span class="carto">per neptunian year</span>
+				</li>
+			</ul>
+			<div id="flyby">
+				<img src="/static/blog/img/earthicon.png" alt="">
+				<img src="/static/blog/img/246min.png" alt="">
+				<img id="voyager2" src="/static/blog/img/voyager2.png" alt="Voyager 2">
+			</div>
+            <span style="font-size: large;"><a style="color: white;pointer-events: auto" href="{% url 'comment:message' 'neptune' %}">Neptune留言墙</a></span>
+		</section>
+	</div>
+	
+	<div id="counters"></div>
+
+	<script data-main="main.min" src="/static/blog/js/require-jquery-1.4.4.min.js"></script>
+    <script>
+        $(function(){var myElement=document.querySelector(".blog-navbar");var headroom=new Headroom(myElement);headroom.init()});
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends 'blog/base.html' %}
+{% block base_content %}
+    <div class="container">
+        <div class="col-md-9">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-white border-0 rounded-0 mb-2 py-2 f-15">
+                    <li class="breadcrumb-item">
+                        <i class="fa fa-home mr-1"></i><a href="{% url 'blog:index' %}">首页</a>
+                    </li>
+                    <li class="breadcrumb-item active d-none d-md-block" aria-current="page">单词</li>
+                    <li class="breadcrumb-item active d-md-none" aria-current="page">当前位置</li>
+                </ol>
+            </nav>
+            <div class="card rounded-0 border-0" id="article">
+                <div class="card-body px-2 px-md-3 pb-0">
+                    <h1 class="card-title text-center font-weight-bold text-info">{{ star.name }}单词学习</h1>
+                    <hr>
+                </div>
+          <div class="container">
+        <form method="post" action="{% url 'word:search' %}">
+            {% csrf_token %}
+             <div class="card border-info">
+              <div class="card-body">
+                <h5 class="card-title">查单词</h5>
+                <input type="text" name="word" placeholder="输入要查询的单词" style="width: 100%;" required autofocus>
+                <br><br>
+                <input type="submit" class="btn btn-info" value="查询" required/>
+              </div>
+             </div>
+             <div class="form-group">
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <br>
+                                <div {% if msg.tags == 'success' %} class="alert alert-success"
+                                     {% else %} class="alert alert-warning" {% endif %}>
+                                         <a href="#" class="close" data-dismiss="alert">
+                                            &times;
+                                         </a>
+                                        <strong>{{ msg.message }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+              </div>
+        </form>
+        {% if word %}
+            <div class="card border-info">
+              <div class="card-header bg-info text-light">查询结果</div>
+              <div class="card-body text-dark">
+                <h5 class="card-title">{{ word }}</h5>
+                <p class="card-text">英式发音</p>
+                <audio src="{{ uk_audio }}" controls="controls"></audio><br>
+                <p class="card-text">美式发音</p>
+                <audio src="{{ us_audio }}" controls="controls"></audio><br>
+                <br>
+                <p class="card-text">{{ en_definition }}</p>
+                <p class="card-text">{{ definition }}</p>
+                <p class="card-text"><a href="{{ detail }}" target="_blank">单词详情</a></p>
+              </div>
+            </div>
+        {% endif %}
+    <br><br>
+    </div></div></div>
+</div>
+{% endblock %}

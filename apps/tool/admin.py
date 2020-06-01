@@ -9,11 +9,7 @@ if settings.TOOL_FLAG:
     class ToolLinkAdmin(admin.ModelAdmin):
         list_display = ('name', 'description', 'link', 'order_num','category')
 
-        list_filter = ('category',)
-
 
     @admin.register(ToolCategory)
     class ToolCategoryAdmin(admin.ModelAdmin):
         list_display = ('name', 'order_num')
-
-

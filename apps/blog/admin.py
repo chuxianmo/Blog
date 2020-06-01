@@ -1,7 +1,5 @@
 from django.contrib import admin
-from .models import (Article, Tag, Category, Timeline,
-                     Carousel, Silian, Keyword, FriendLink,
-                     AboutBlog)
+from .models import Article, Tag, Category, Timeline, Carousel, Silian, Keyword, FriendLink
 
 
 @admin.register(Article)
@@ -12,13 +10,13 @@ class ArticleAdmin(admin.ModelAdmin):
     exclude = ('views',)
 
     # 在查看修改的时候显示的属性，第一个字段带有<a>标签，所以最好放标题
-    list_display = ('id', 'title', 'author', 'create_date', 'update_date', 'is_top')
+    list_display = ('id', 'title', 'author', 'create_date', 'update_date')
 
     # 设置需要添加<a>标签的字段
     list_display_links = ('title',)
 
     # 激活过滤器，这个很有用
-    list_filter = ('create_date', 'category', 'is_top')
+    list_filter = ('create_date', 'category')
 
     list_per_page = 50  # 控制每页显示的对象数量，默认是100
 
@@ -79,20 +77,3 @@ class FriendLinkAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'link', 'create_date', 'is_active', 'is_show')
     date_hierarchy = 'create_date'
     list_filter = ('is_active', 'is_show')
-
-
-@admin.register(AboutBlog)
-class AboutBlogAdmin(admin.ModelAdmin):
-    list_display = ('short_body', 'create_date', 'update_date')
-
-    def short_body(self, obj):
-        return '自由编辑 About 页面的内容，支持 markdown 语法。'
-
-    short_body.short_description = 'AboutBlog'
-
-    # 限制用户权限，只能超管可以编辑
-    def get_queryset(self, request):
-        qs = super(AboutBlogAdmin, self).get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        return None

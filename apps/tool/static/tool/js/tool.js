@@ -1,27 +1,7 @@
-//get url params
-var getParam = function(name){
-    var search = document.location.search;
-    var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
-    var matcher = pattern.exec(search);
-    var items = null;
-    if(null != matcher){
-            try{
-                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
-            }catch(e){
-                    try{
-                            items = decodeURIComponent(matcher[1]);
-                    }catch(e){
-                            items = matcher[1];
-                    }
-            }
-    }
-    return items;
-};
-
 //baidu links push api
 function push_spider(CSRF, URL) {
-	var url = $.trim($('#form-url').val());
-	var urls = $.trim($('#form-urls').val());
+	var url = $('#form-url').val();
+	var urls = $('#form-urls').val();
 	if (url.length == 0 | urls.length == 0) {
 		alert('接口地址和网址链接内容都不能为空！');
 		return false
@@ -48,8 +28,8 @@ function push_spider(CSRF, URL) {
 
 //sitemap urls baidu push api
 function site_push_spider(CSRF, URL) {
-	var url = $.trim($('#form-url').val());
-	var map_url = $.trim($('#form-sitemap').val());
+	var url = $('#form-url').val();
+	var map_url = $('#form-sitemap').val();
 	if (url.length == 0 | map_url.length == 0) {
 		alert('接口地址和sitemap地址内容都不能为空！');
 		return false
@@ -74,10 +54,44 @@ function site_push_spider(CSRF, URL) {
 	})
 }
 
+//link test api
+function link_test_spider(CSRF, URL) {
+	var p = $('#form-info').val();
+	var urls = $('#form-links').val();
+	if (p.length == 0 | urls.length == 0) {
+		alert('需要检查的信息和友链地址都不能为空！');
+		return false
+	};
+	$.ajaxSetup({
+		data: {
+			csrfmiddlewaretoken: CSRF
+		}
+	});
+	$('.push-result').html('<i class="fa fa-spinner fa-pulse fa-3x my-3"></i>');
+	$.ajax({
+		type: 'post',
+		url: URL,
+		data: {
+			'p': p,
+			'urls': urls
+		},
+		dataType: 'json',
+		success: function(ret) {
+		    var tab = '<table class="table"><thead class="thead-light"><tr><th scope="col">友情链接</th>' +
+                '<th scope="col">状态</th></tr></thead><tbody>'
+            for (var i in ret){
+                tab += '<tr><th scope="row">' + i + '</th><td>' + ret[i] + '</td></tr>'
+            }
+            tab += '</tbody></table>'
+			$('.push-result').html(tab);
+		},
+	})
+}
+
 //regex api
 function regex_api(CSRF, URL) {
-	var r = $.trim($('#form-regex').val());
-	var texts = $.trim($('#form-text').val());
+	var r = $('#form-regex').val();
+	var texts = $('#form-text').val();
 	if (r.length == 0 | texts.length == 0) {
 		alert('待提取信息和正则表达式都不能为空！');
 		return false
@@ -93,8 +107,7 @@ function regex_api(CSRF, URL) {
 		url: URL,
 		data: {
 			'r': r,
-			'texts': texts,
-			'key':getParam('key')
+			'texts': texts
 		},
 		dataType: 'json',
 		success: function(ret) {
@@ -144,50 +157,5 @@ function useragent_api(CSRF, URL) {
 		success: function(ret) {
 			$('.push-result').text(ret.result)
 		},
-	})
-}
-
-//docker search
-function docker_search(CSRF, URL) {
-	var name = $.trim($('#image-name').val());
-	if (name.length == 0) {
-		alert('待查询的镜像名称不能为空！');
-		return false
-	};
-	$.ajaxSetup({
-		data: {
-			csrfmiddlewaretoken: CSRF
-		}
-	});
-	$('.push-result').html('<i class="fa fa-spinner fa-pulse fa-3x my-3"></i>');
-	$.ajax({
-		type: 'post',
-		url: URL,
-		data: {
-			'name': name,
-		},
-		dataType: 'json',
-		success: function(ret) {
-		    var newhtml = '<table class="table table-bordered my-0"><thead class="thead-light"><tr><th scope="col">镜像版本</th>' +
-		        '<th scope="col">镜像大小</th><th scope="col">更新时间</th></tr></thead><tbody>';
-            for (var i=0;i < ret.results.length; i++) {
-				var item = ret.results[i]
-                newhtml += '<tr><th scope="row">' + item.name + '</th><td>' + item.full_size + '</td><td>' + item.last_updated + '</td></tr>'
-            }
-		    newhtml += '</tbody></table>'
-			$('.push-result').html(newhtml);
-		},
-		error: function(XMLHttpRequest) {
-			var _code = XMLHttpRequest.status;
-			if (_code == 404) {
-				var error_text = '镜像仓库没有查询到相关信息，请检查镜像名称后重试！';
-			} else if (_code == 500) {
-				var error_text = '请求超时，请稍后重试！'
-			} else {
-				var error_text = '未知错误...'
-			}
-			var newhtml = '<div class="my-2">' + error_text + '</div>';
-			$('.push-result').html(newhtml);
-		}
 	})
 }

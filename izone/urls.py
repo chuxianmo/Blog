@@ -13,16 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.urls import path, include
+from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
-from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
 from blog.sitemaps import ArticleSitemap, CategorySitemap, TagSitemap
 from blog.feeds import AllArticleRssFeed
-from blog.views import robots
+
+from rest_framework.routers import DefaultRouter
+from api import views as api_views
+
+if settings.API_FLAG:
+    router = DefaultRouter()
+    router.register(r'users',api_views.UserListSet)
+    router.register(r'articles',api_views.ArticleListSet)
+    router.register(r'tags',api_views.TagListSet)
+    router.register(r'categorys',api_views.CategoryListSet)
+    router.register(r'timelines',api_views.TimelineListSet)
+    router.register(r'toollinks',api_views.ToolLinkListSet)
 
 # 网站地图
 sitemaps = {
@@ -32,20 +43,19 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path('favicon.ico', RedirectView.as_view(url='/static/blog/img/favicon.ico')),
-    path('adminx/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),  # allauth
-    path('accounts/', include(('oauth.urls', 'oauth'), namespace='oauth')),  # oauth,只展现一个用户登录界面
-    path('', include(('blog.urls', 'blog'), namespace='blog')),  # blog
-    path('comment/',include(('comment.urls', 'comment'),namespace='comment')), # comment
-    path('robots.txt', robots, name='robots'), # robots
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'), # 网站地图
-    path('feed/', AllArticleRssFeed(), name='rss'),   # rss订阅
+    url(r'^adminx/', admin.site.urls),
+    url(r'^accounts/', include('allauth.urls')),  # allauth
+    url(r'^accounts/', include('oauth.urls', namespace='oauth')),  # oauth,只展现一个用户登录界面
+    url('', include('blog.urls', namespace='blog')),  # blog
+    url(r'^comment/',include('comment.urls',namespace='comment')), # comment
+    url(r'^word/',include('word.urls',namespace='word')),  # word
+    url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')), # robots
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'), # 网站地图
+    url(r'^feed/$', AllArticleRssFeed(), name='rss'),   # rss订阅
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # 加入这个才能显示media文件
 
 if settings.API_FLAG:
-    from api.urls import router
-    urlpatterns.append(path('api/v1/',include((router.urls, router.root_view_name),namespace='api')))    # restframework
+    urlpatterns.append(url(r'^api/v1/',include(router.urls,namespace='api')))    # restframework
 
 if settings.TOOL_FLAG:
-    urlpatterns.append(path('tool/', include(('tool.urls', 'tool'),namespace='tool')))    # tool
+    urlpatterns.append(url(r'^tool/', include('tool.urls',namespace='tool')))    # tool

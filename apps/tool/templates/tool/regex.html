@@ -29,14 +29,14 @@
 </div>
 <div class="card mb-3 rounded-0">
     <div class="card-header text-center text-info font-weight-bold py-2">匹配结果</div>
-    <div class="card-body table-responsive push-result text-center p-3">结果显示区</div>
+    <div class="card-body push-result text-center p-3">结果显示区</div>
 </div>
 {% endblock %}
 
 {% block end_f %}
 <script>
 $('#start-re').click(function() {
-	regex_api("{{ csrf_token }}", "{% url 'tool:regex' %}");
+	regex_api("{{ csrf_token }}", "{% url 'tool:regex_api' %}");
 })
 
 </script>

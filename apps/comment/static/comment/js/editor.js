@@ -96,10 +96,6 @@ $(function() {
             alert("评论内容不能为空！");
             return;
         }
-        if (content.length > 1048) {
-            alert("评论字数(含空格)为：" + content.length + "，超过1048，请精简后再提交！");
-            return;
-        }
         var base_t = sessionStorage.getItem('base_t');
         var now_t = Date.parse(new Date());
         if (base_t) {

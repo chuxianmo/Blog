@@ -12,8 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 import sys
-
-# 导入网站个人信息，非通用信息
+import platform
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,21 +20,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 添加 apps 目录
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '#!kta!9e0)24d@9#<*=ra$r!0k0+p8@w+a%7g1bbof0+ad@4_('
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('IZONE_SECRET_KEY', '#!kta!9e0)24d@9#=*=ra$r!0k0+p5@w+a%7g1bbof9+ad@4_(')
-
-# 是否开启[在线工具]应用
-TOOL_FLAG = os.getenv('IZONE_TOOL_FLAG', 'True').upper() == 'TRUE'
+# 自由选择需要开启的功能
+# 是否开始[在线工具]应用
+TOOL_FLAG = True
 # 是否开启[API]应用
-API_FLAG = os.getenv('IZONE_API_FLAG', 'False').upper() == 'TRUE'
+API_FLAG = False
+# DEBUG模式是否开始的选择
+# 值为0：所有平台关闭DEBUG,值为1:所有平台开启DEBUG,值为其他：根据平台类型判断开启（默认设置的Windows下才开启）
+DEBUG = True
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('IZONE_DEBUG', 'True').upper() == 'TRUE'
-
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -54,7 +54,7 @@ INSTALLED_APPS = [
 
     'oauth',  # 自定义用户应用
     # allauth需要注册的应用
-    'django.contrib.sites',  # 这个是自带的，会创建一个sites表，用来存放域名
+    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -70,8 +70,16 @@ INSTALLED_APPS = [
     'blog',  # 博客应用
     'tool',  # 工具
     'comment',  # 评论
+    'word',  # 单词
 
 ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # 自定义用户model
 AUTH_USER_MODEL = 'oauth.Ouser'
@@ -93,9 +101,9 @@ SITE_ID = 2
 LOGIN_REDIRECT_URL = "/"
 
 # Email setting
-# 注册中邮件验证方法:“强制（mandatory）”,“可选（optional）【默认】”或“否（none）”之一。
-# 开启邮箱验证的话，如果邮箱配置不可用会报错，所以默认关闭，根据需要自行开启
-ACCOUNT_EMAIL_VERIFICATION = os.getenv('IZONE_ACCOUNT_EMAIL_VERIFICATION', 'none')
+# imoprt from base_settings more infos
+# 禁用注册邮箱验证
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 # 登录方式，选择用户名或者邮箱都能登录
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 # 设置用户注册的时候必须填写邮箱地址
@@ -196,6 +204,15 @@ HAYSTACK_CONNECTIONS = {
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
+
+# 使用默认的缓存，缓存页面，缓存配置如下：
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
 # restframework settings
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -205,78 +222,17 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
-# 配置数据库
-MYSQL_HOST = os.getenv('IZONE_MYSQL_HOST', '127.0.0.1')
-MYSQL_NAME = os.getenv('IZONE_MYSQL_NAME', 'izone')
-MYSQL_USER = os.getenv('IZONE_MYSQL_USER', 'root')
-MYSQL_PASSWORD = os.getenv('IZONE_MYSQL_PASSWORD', 'python')
-MYSQL_PORT = os.getenv('IZONE_MYSQL_PORT', 3306)
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # 修改数据库为MySQL，并进行配置
-        'NAME': MYSQL_NAME,  # 数据库的名称
-        'USER': MYSQL_USER,  # 数据库的用户名
-        'PASSWORD': MYSQL_PASSWORD,  # 数据库的密码
-        'HOST': MYSQL_HOST,
-        'PORT': MYSQL_PORT,
-        'OPTIONS': {'charset': 'utf8'}
-    }
-}
-
-# 使用django-redis缓存页面，缓存配置如下：
-REDIS_HOST = os.getenv('IZONE_REDIS_HOST', '127.0.0.1')
-REDIS_PORT = os.getenv('IZONE_REDIS_PORT', 6379)
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://{}:{}".format(REDIS_HOST, REDIS_PORT),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
-
-# 配置管理邮箱，服务出现故障会收到到邮件，环境变量值的格式：name|test@test.com 多组用户用英文逗号隔开
-ADMINS = []
-admin_email_user = os.getenv('IZONE_ADMIN_EMAIL_USER')
-if admin_email_user:
-    for each in admin_email_user.split(','):
-        a_user, a_email = each.split('|')
-        ADMINS.append((a_user, a_email))
-
 # 邮箱配置
-EMAIL_HOST = os.getenv('IZONE_EMAIL_HOST', 'smtp.163.com')
-EMAIL_HOST_USER = os.getenv('IZONE_EMAIL_HOST_USER', 'your-email-address')
-EMAIL_HOST_PASSWORD = os.getenv('IZONE_EMAIL_HOST_PASSWORD', 'your-email-password')  # 这个不是邮箱密码，而是授权码
-EMAIL_PORT = os.getenv('IZONE_EMAIL_PORT', 465)  # 由于阿里云的25端口打不开，所以必须使用SSL然后改用465端口
-EMAIL_TIMEOUT = 5
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_HOST_USER = 'your-email@163.com'
+EMAIL_HOST_PASSWORD = 'your-password'  # 这个不是邮箱密码，而是授权码
+EMAIL_PORT = 465  # 由于阿里云的25端口打不开，所以必须使用SSL然后改用465端口
 # 是否使用了SSL 或者TLS，为了用465端口，要使用这个
-EMAIL_USE_SSL = os.getenv('IZONE_EMAIL_USE_SSL', 'True').upper() == 'TRUE'
+EMAIL_USE_SSL = True
 # 默认发件人，不设置的话django默认使用的webmaster@localhost，所以要设置成自己可用的邮箱
-DEFAULT_FROM_EMAIL = os.getenv('IZONE_DEFAULT_FROM_EMAIL', 'TendCode博客 <your-email-address>')
+DEFAULT_FROM_EMAIL = 'your-webname <your-email@163.com>'
 
 # 网站默认设置和上下文信息
-SITE_LOGO_NAME = os.getenv('IZONE_LOGO_NAME', 'TendCode')
-SITE_END_TITLE = os.getenv('IZONE_SITE_END_TITLE', 'izone')
-SITE_DESCRIPTION = os.getenv('IZONE_SITE_DESCRIPTION', 'izone 是一个使用 Django+Bootstrap4 搭建的个人博客类型网站')
-SITE_KEYWORDS = os.getenv('IZONE_SITE_KEYWORDS', 'izone,Django博客,个人博客')
-
-# 个性化设置，非必要信息
-# 个人 Github 地址
-MY_GITHUB = os.getenv('IZONE_GITHUB', 'https://github.com/Hopetree')
-# 工信部备案信息
-BEIAN = os.getenv('IZONE_BEIAN', '网站备案信息')
-# 站长统计（友盟）
-CNZZ_PROTOCOL = os.getenv('IZONE_CNZZ_PROTOCOL', '')
-# 站长推送
-MY_SITE_VERIFICATION = os.getenv('IZONE_SITE_VERIFICATION', '')
-# 使用 http 还是 https （sitemap 中的链接可以体现出来）
-PROTOCOL_HTTPS = os.getenv('IZONE_PROTOCOL_HTTPS', 'HTTP').lower()
-# hao.tendcode.com
-HAO_CONSOLE = {
-    'flag': os.getenv('IZONE_HAO_FLAG', 'False').upper() == 'TRUE',
-    'name': os.getenv('IZONE_HAO_NAME', '微草导航'),
-    'url': os.getenv('IZONE_HAO_URL', 'https://hao.tendcode.com')
-}
+SITE_END_TITLE = '网站的名称，如TendCode'
+SITE_DESCRIPTION = '网站描述'
+SITE_KEYWORDS = '网站关键词，多个词用英文逗号隔开'
