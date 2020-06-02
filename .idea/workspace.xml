@@ -5,9 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/blog/templates/blog/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/blog/templates/blog/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/blog/templates/blog/homepage.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/blog/templates/blog/homepage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/blog/templates/blog/tags/base_right.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/blog/templates/blog/tags/base_right.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/blog/templates/blog/tags/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/blog/templates/blog/tags/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/blog/templates/blog/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/blog/templates/blog/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/izone/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/izone/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +89,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1590651799013</updated>
-      <workItem from="1590651800584" duration="56428000" />
+      <workItem from="1590651800584" duration="57670000" />
     </task>
     <servers />
   </component>
@@ -98,6 +97,14 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="220" y="23" key="#Deployment" timestamp="1591087405157">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="220" y="23" key="#Deployment/0.0.1440.900@0.0.1440.900" timestamp="1591087405157" />
+    <state x="200" y="6" key="#SSH_Configurations" timestamp="1591087305111">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="200" y="6" key="#SSH_Configurations/0.0.1440.900@0.0.1440.900" timestamp="1591087305111" />
     <state x="112" y="3" key="SettingsEditor" timestamp="1590651935960">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -107,6 +114,10 @@
     </state>
     <state x="100" y="83" width="1240" height="760" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.23.1440.828@0.23.1440.828" timestamp="1590994643237" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.23.1440.830@0.23.1440.830" timestamp="1590994332260" />
+    <state x="583" y="114" width="419" height="649" key="ftp.server.browser" timestamp="1591087402017">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="583" y="114" width="419" height="649" key="ftp.server.browser/0.0.1440.900@0.0.1440.900" timestamp="1591087402017" />
     <state x="301" y="0" width="838" height="900" key="search.everywhere.popup" timestamp="1590991153861">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

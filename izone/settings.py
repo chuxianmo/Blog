@@ -35,7 +35,7 @@ API_FLAG = False
 # 值为0：所有平台关闭DEBUG,值为1:所有平台开启DEBUG,值为其他：根据平台类型判断开启（默认设置的Windows下才开启）
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -233,6 +233,6 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'your-webname <your-email@163.com>'
 
 # 网站默认设置和上下文信息
-SITE_END_TITLE = '网站的名称，如TendCode'
-SITE_DESCRIPTION = '网站描述'
-SITE_KEYWORDS = '网站关键词，多个词用英文逗号隔开'
+SITE_END_TITLE = 'StarBlog'
+SITE_DESCRIPTION = '星球博客'
+SITE_KEYWORDS = '星球,博客'
