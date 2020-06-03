@@ -10,7 +10,11 @@ def search(request):
       @Description: search english word
     """
     if request.method == 'POST':
-        word_str = request.POST.get('word')
+        word_str = str(request.POST.get('word'))
+        for c in word_str:
+            if '\u4e00' <= c <= '\u9fa5':
+                messages.add_message(request, messages.ERROR, "输入出错")
+                return render(request, 'word/search.html')
         try:
             word = Word.objects.get(word__iexact=word_str)
             definition = word.definition
@@ -38,7 +42,7 @@ def search(request):
             uk_audio = data['data']['uk_audio']
             us_audio = data['data']['us_audio']
             detail = data['data']['url']
-            word = Word.objects.create(word=word_str,
+            Word.objects.create(word=word_str,
                                        definition=definition,
                                        uk_audio=uk_audio,
                                        us_audio=us_audio,

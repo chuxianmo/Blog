@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="47.107.153.52">
+  <component name="PublishConfigData" serverName="47.107.153.52" showNewOnTargetInSync="false">
     <serverData>
       <paths name="47.107.153.52">
         <serverdata>
           <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/Blog" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
